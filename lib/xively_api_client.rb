@@ -13,17 +13,34 @@ module XivelyApiClient
       @pass = args[:pass] || ENV['XIVELY_PASS']
     end
 
-    def create_device serial_id, options = {}
-      json_parse(post(create_device_json serial_id, options)).first
-    end
-
-    def find_by serial_id
-      json_parse( get device_url serial_id ).first
-    end
-
-    def devices
+    def index_devices
       json_parse(get device_url)
     end
+
+    def show_device serial_id
+      response = get device_url serial_id
+      json_parse(response).first
+    end
+
+    def create_device serial_id, options = {}
+      json_parse(post(build_json serial_id, options)).first
+    end
+
+    # Not implemented in API? Or only can change "batch_id": and "device_secret":
+
+    # def update_device serial_id, options = {}
+    #   device = show_device serial_id
+    #   unless (device)
+    #     json_parse put(device.to_json).first
+    #   end
+    # end
+
+    # def put body
+    #   HTTParty.put device_url,
+    #                 :body => body,
+    #                 :basic_auth => credentials,
+    #                 :headers => {'Content-Type' => 'application/json'}
+    # end
 
     def destroy_device serial
       delete device_url(serial)
@@ -32,7 +49,7 @@ module XivelyApiClient
     private
 
     def json_parse response
-      JSON.parse(response.body)["devices"]
+      JSON.parse(response.body)["devices"] || []
     end
 
     def get url
@@ -47,8 +64,7 @@ module XivelyApiClient
     end
 
     def delete url
-      HTTParty.delete url,
-                      :basic_auth => credentials
+      HTTParty.delete url, :basic_auth => credentials
     end
 
     def device_url serial = nil
@@ -61,7 +77,7 @@ module XivelyApiClient
       { username: @user, password: @pass }
     end
 
-    def create_device_json serial_id, options = {}
+    def build_json serial_id, options = {}
       queues = options[:queues] || []
       batch_id = options[:batch_id] || "2ndnozefwvbsi"
       { devices:
