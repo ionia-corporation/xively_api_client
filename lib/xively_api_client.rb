@@ -1,4 +1,6 @@
 require "xively_api_client/version.rb"
+require 'httparty'
+require 'json'
 
 module XivelyApiClient
   class Client
@@ -12,33 +14,41 @@ module XivelyApiClient
     end
 
     def create_device serial_id, options = {}
-      if serial_id
-        response = post(create_device_json serial_id, options)
-        JSON.parse(response.body)["devices"].first
-      end
+      json_parse(post(create_device_json serial_id, options)).first
+    end
+
+    def find_by serial_id
+      json_parse( get device_url serial_id ).first
     end
 
     def devices
-      begin
-        response = HTTParty.get device_url, basic_auth: credentials
-        JSON.parse(response.body)["devices"]
-      rescue
-        nil
-      end
+      json_parse(get device_url)
     end
 
-    def delete serial
-      HTTParty.delete device_url(serial),
-                      :basic_auth => credentials
+    def destroy_device serial
+      delete device_url(serial)
     end
 
     private
+
+    def json_parse response
+      JSON.parse(response.body)["devices"]
+    end
+
+    def get url
+      HTTParty.get url, basic_auth: credentials
+    end
 
     def post body
       HTTParty.post device_url,
                     :body => body,
                     :basic_auth => credentials,
                     :headers => {'Content-Type' => 'application/json'}
+    end
+
+    def delete url
+      HTTParty.delete url,
+                      :basic_auth => credentials
     end
 
     def device_url serial = nil
