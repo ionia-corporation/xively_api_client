@@ -80,10 +80,14 @@ module XivelyApiClient
       batch_id = options[:batch_id] || "2ndnozefwvbsi"
       { devices:
         [{ batch_id: batch_id,
-          queues: queues.map { |q| { name: q, type: "message" } },
+          queues: build_queues(queues),
           serial: serial_id
         }]
       }.to_json
+    end
+
+    def build_queues queues
+      queues.map { |q| { name: q, type: "message" } }
     end
 
   end
