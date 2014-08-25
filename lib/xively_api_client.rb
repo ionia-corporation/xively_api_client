@@ -53,18 +53,18 @@ module XivelyApiClient
     end
 
     def get url
-      HTTParty.get url, basic_auth: credentials
+      http_client.get url, basic_auth: credentials
     end
 
     def post body
-      HTTParty.post device_url,
+      http_client.post device_url,
                     :body => body,
                     :basic_auth => credentials,
                     :headers => {'Content-Type' => 'application/json'}
     end
 
     def delete url
-      HTTParty.delete url, :basic_auth => credentials
+      http_client.delete url, :basic_auth => credentials
     end
 
     def device_url serial = nil
@@ -90,5 +90,8 @@ module XivelyApiClient
       queues.map { |q| { name: q, type: "message" } }
     end
 
+    def http_client
+      HTTParty
+    end
   end
 end
