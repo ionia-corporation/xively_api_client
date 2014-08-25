@@ -68,9 +68,7 @@ module XivelyApiClient
     end
 
     def device_url serial = nil
-      url = "https://v3api.xively.com/v3/service_instances/#{ instance }/domains/#{ domain }/devices"
-      url += "/#{ serial }" if serial
-      url
+      url = "https://v3api.xively.com/v3/service_instances/#{ instance }/domains/#{ domain }/devices/#{serial}"
     end
 
     def credentials
