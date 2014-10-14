@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'Client' do
   let(:client){
-    client = XivelyApiClient::Client.new
+    client = Xively::ApiClient.new
     allow(client).to receive(:json_parse).and_return []
     allow(client).to receive :post
     allow(client).to receive(:http_client).and_return http_client
