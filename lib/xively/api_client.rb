@@ -12,16 +12,16 @@ module Xively
       @pass = args[:pass] || ENV['XIVELY_PASS']
     end
 
-    def index_devices
+    def devices
       json_parse(get device_url)
     end
 
-    def show_device serial_id
+    def device serial_id
       response = get device_url serial_id
       json_parse(response).first
     end
 
-    def create_device serial_id, options = {}
+    def create serial_id, options = {}
       json_parse(post(build_json serial_id, options)).first
     end
 
@@ -41,7 +41,7 @@ module Xively
     #                 :headers => {'Content-Type' => 'application/json'}
     # end
 
-    def destroy_device serial
+    def destroy serial
       delete device_url(serial)
     end
 
