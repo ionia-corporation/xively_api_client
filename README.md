@@ -1,24 +1,51 @@
 # XivelyApiClient
 
-TODO: Write a gem description
+Gem for handling xively devices's credentials.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
     gem 'xively_api_client'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install xively_api_client
 
 ## Usage
 
-TODO: Write usage instructions here
+### Set up environment variables (optional)
+
+    XIVELY_USER
+    XIVELY_PASS
+    XIVELY_INSTANCE
+    XIVELY_DOMAIN
+
+### Instantiate the client
+
+```ruby
+  client = Xively::ApiClient.new   # will use env variables
+
+  other_client = Xively::ApiClient.new user: "app_username", pass: "app_password", domain: "abc", instance: "123"
+```
+
+### List devices
+
+```ruby
+  client.devices
+```
+
+### Get a device
+
+```ruby
+  client.device "serial_id_here"
+```
+
+### Create a device
+
+```ruby
+  client.create_device "serial_id", batch_id: "1234", queues: [ "readings", "input", "last_will" ]
+```
+
+### Destroy a device
+
+```ruby
+  client.destroy "serial_id"
+```
 
 ## Contributing
 
